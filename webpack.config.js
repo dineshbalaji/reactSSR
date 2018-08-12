@@ -1,5 +1,5 @@
-module.exports = {
-  target:'node',
+const path = require('path');
+const baseConfig = {
   module: {
     rules: [
       {
@@ -16,15 +16,40 @@ module.exports = {
       }
     ]
   },
- /*  optimization: {
+}
+
+const serverConfig = {
+  entry:{
+    server:'./src/server.js'
+  },
+  target:'node',
+  output:{
+    path:path.resolve(__dirname,'dist'),
+    filename:"server.js",
+    libraryTarget: 'commonjs2',
+  }
+}
+const clientConfig = {
+  entry:{
+    bootstrap:'./src/bootstrap.js'
+  },
+  target:'web',
+  output:{
+    path:path.resolve(__dirname,'dist'),
+    filename:"bootstrap.js"
+  },
+  optimization: {
     splitChunks: {
         cacheGroups: {
             commons: {
                 test: /[\\/]node_modules[\\/]/,
                 name: 'vendor',
-                chunks: 'initial'
+                chunks: 'all'
             }
         }
     }
-} */
-};
+}
+}
+
+module.exports = [Object.assign(clientConfig,baseConfig),
+  Object.assign(serverConfig,baseConfig)];
