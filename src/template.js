@@ -1,5 +1,13 @@
-export const Html = (app)=> `
+export const Html = (app,serverData)=> `
 <html>
+
+<head>
+<script>
+    // Making SSR indicator to false while application run on CSR.
+    window.__isSSR = false; 
+    var serverData = JSON.parse('${serverData}');
+</script>
+</head>
 <body>
 
 <div id="container">

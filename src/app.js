@@ -3,27 +3,26 @@ import 'isomorphic-fetch';
 
 import React from 'react';
 import { Component } from "react";
-console.log('app');
+import config from './config';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
-    console.log('>>constructor', props.users);
-    
-    this.state = { text: 'dinesh', users: props.users || []};
+    console.log('>>constructor >> isSSR', window.__isSSR);
+    this.state = { text: 'dinesh', ssrUsers: props.users, csrUsers:[]};
   }
   static getDerivedStateFromProps(props, state){
-    console.log('>>GDSFP')
-    //return {...state, ...{users:props.users}} // Todo:issue: not working
-    return Object.assign({},state,{users:props.users || []});
+    console.log('>>GDSFP >> isSSR', window.__isSSR);
+    return state;
   }
-  shouldComponentUpdate(){
-    console.log('>> shouldComponentUpdate')
+  shouldComponentUpdate(nextProps, nextState){
+    console.log('>> shouldComponentUpdate');
     return true;
   }
   getSnapshotBeforeUpdate(prevProps,prevState){
-    console.log('>>getSnapshortBeforeUpdate')
+    console.log('>>getSnapshortBeforeUpdate');
   }
+  
 
   textChangeHandler(evt) {
     this.setState({
@@ -31,7 +30,8 @@ export default class App extends Component {
     });
   }
   render() {
-    console.log('>>render')
+    
+    console.log('render >> __isSSR', window.__isSSR);
     return (
     <div>
       <h1>React server side rendering</h1>
@@ -39,15 +39,25 @@ export default class App extends Component {
       <label htmlFor="input-box">Typing somthing to confirm event handling in CSR</label>  
       <input id="input-box" type="text" onChange={this.textChangeHandler.bind(this)} />
 
-      <p>Listing users from SSR</p>
+      <p>Listing users in SSR</p>
       <ul>
-        {this.state.users.map(user => (<li key={user.id}>{user.name}</li>))}
+        {this.state.ssrUsers.map(user => (<li key={user.id}>{user.name}</li>))}
       </ul>
+      <p>Listing Agian, users in CSR</p>
+       <ul>
+       {this.state.csrUsers.map(user => (<li key={user.id}>{user.name}</li>))}
+       </ul>
     </div>
     );
   }
   componentDidMount(){
+
     console.log('>> componentDidMount');
+
+    fetch(config.urls.getUsers).then(r => r.json()).then((_users) => {
+      this.setState({csrUsers:_users});
+    })
+    
   }
   componentDidUpdate(){
     console.log('>> componentDidupdate');

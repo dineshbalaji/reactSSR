@@ -10,7 +10,7 @@ const baseConfig = {
           loader: 'babel-loader',
           options: {
             presets: ['react', 'env'],
-            /* plugins: ['@babel/plugin-transform-runtime'] */
+             plugins: ['transform-object-rest-spread'] 
           }
         }
       }

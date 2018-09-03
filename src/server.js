@@ -2,9 +2,19 @@ require('es6-promise').polyfill();
 import 'isomorphic-fetch';
 import express from 'express';
 import React from 'react';
+import {JSDOM} from 'jsdom';
 import { renderToString } from "react-dom/server";
+
 import { Html } from "./template";
 import App from "./app";
+import config from './config';
+
+//const { window } = new JSDOM(`...`); // creating fake window for node
+require('jsdom-global')();
+
+// Making SSR indicator to false while application run on CSR.
+window.__isSSR = true; 
+
 
 let app = express();
 
@@ -17,11 +27,13 @@ app.use('/dist', express.static('dist'));
 
 app.get('/', (req, res) => {
 
-  fetch('https://jsonplaceholder.typicode.com/users').then(r => r.json()).then((_users) => {
+  fetch(config.urls.getUsers).then(r => r.json()).then((_users) => {
 
     // TODO: catch issue in server side render (currently blocking page)
+    let serverData = {users:_users};
+    let reactHtmlString = renderToString(<App users={_users}/>);
+    let html = Html(reactHtmlString,JSON.stringify(serverData));
     
-    let html = Html(renderToString(<App users={_users} />))
     res.send(html);
 
   })
