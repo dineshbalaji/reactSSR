@@ -1,5 +1,4 @@
-export const Html = (app,serverData)=> `
-<html>
+export const headHtml = (serverData) =>`<html>
 
 <head>
 <script>
@@ -9,12 +8,15 @@ export const Html = (app,serverData)=> `
 </script>
 </head>
 <body>
+<div id="container">`;
 
-<div id="container">
-${app}
-</div>
+export const tailHtml =`</div>
 <script src="./dist/vendor.bootstrap.js" type="text/javascript"></script>
 <script src="./dist/bootstrap.js" type="text/javascript"></script>
 </body>
-</html>
+</html>`
+
+export const Html = (app,serverData)=> `${headHtml(serverData)}
+${app}${tailHtml}
 `
+
