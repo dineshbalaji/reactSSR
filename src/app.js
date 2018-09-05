@@ -50,6 +50,9 @@ export default class App extends Component {
     </div>
     );
   }
+  componentDidCatch(err){
+    console.log('>>componentDidCatch');
+  }
   componentDidMount(){
 
     console.log('>> componentDidMount');

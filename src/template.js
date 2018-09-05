@@ -20,3 +20,12 @@ export const Html = (app,serverData)=> `${headHtml(serverData)}
 ${app}${tailHtml}
 `
 
+export const errorHtml = (error) =>`
+<html>
+<body>
+    <h1>Somthing went wrong</h1>
+    <p>Error log: <code>${error}</code></p>
+</body>
+</html>
+`
+
